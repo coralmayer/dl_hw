@@ -95,7 +95,8 @@ class NearestNeighborClassifier:
         """
         
         x = self.input_normalization(x)
-        idx = ...  # Implement me:
+        dist = ((self.data_normalized - x) ** 2).sum(dim=1)
+        idx = torch.topk(dist, k, largest=False).indices
         return self.data[idx], self.label[idx]
 
     def knn_regression(self, x: torch.Tensor, k: int) -> torch.Tensor:
@@ -110,4 +111,5 @@ class NearestNeighborClassifier:
         Returns:
             average value of labels from the k neighbors. Tensor of shape [1]
         """
-        raise NotImplementedError
+        _, labels = self.get_k_nearest_neighbor(x, k)
+        return labels.mean().unsqueeze(0)
