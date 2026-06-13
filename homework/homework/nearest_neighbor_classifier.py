@@ -33,7 +33,7 @@ class NearestNeighborClassifier:
         Returns:
             tuple of x and y both torch.Tensor's.
         """
-        raise NotImplementedError
+        return torch.as_tensor(x, dtype=float32), torch.as_tensor(y, dtype=float32)
 
     @classmethod
     def compute_data_statistics(cls, x: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
@@ -48,7 +48,9 @@ class NearestNeighborClassifier:
             tuple of mean and standard deviation of the data.
             Both should have a shape [1, D]
         """
-        raise NotImplementedError
+        mean = x.mean(dim=0, keepdim=True)
+        std = x.std(dim=0, keepdim=True, unbiased=False)
+        return mean, std
 
     def input_normalization(self, x: torch.Tensor) -> torch.Tensor:
         """
@@ -72,9 +74,10 @@ class NearestNeighborClassifier:
         Returns:
             tuple of the nearest neighbor data point [D] and its label [1]
         """
-        raise NotImplementedError
+        
         x = self.input_normalization(x)
-        idx = ...  # Implement me:
+        dist = ((self.data_normalized - x) ** 2).sum(dim=1)
+        idx = torch.argmin(dist)
         return self.data[idx], self.label[idx]
 
     def get_k_nearest_neighbor(self, x: torch.Tensor, k: int) -> tuple[torch.Tensor, torch.Tensor]:
@@ -90,7 +93,7 @@ class NearestNeighborClassifier:
             data points will be size (k, D)
             labels will be size (k,)
         """
-        raise NotImplementedError
+        
         x = self.input_normalization(x)
         idx = ...  # Implement me:
         return self.data[idx], self.label[idx]
