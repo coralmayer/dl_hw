@@ -157,7 +157,7 @@ class PyTorchBasics:
 
         Solution length: 27 characters
         """
-        return torch.diag(torch.flip(x, dims = 1))
+        return torch.diag(torch.flip(x, dims = (1,)))
 
     @staticmethod
     def make_it_pytorch_8(x: torch.Tensor) -> torch.Tensor:
